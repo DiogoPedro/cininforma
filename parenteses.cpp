@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 using namespace std;
+#define ptrnull NULL
 
 struct Node{
     char val;
@@ -8,52 +9,131 @@ struct Node{
 };
 typedef struct Node node;
 
-node *adicionar_lista(char x, node *head);
+void adicionar_lista(char x, node *head);
 void observar_lista(node *head);
-node *remocao_lista(node *head);
+char remocao_lista(node *head);
 
 int main(){
     string rbs;
-    node *head = new node;
-    head->pont = NULL;
-    head->val = 'x';
+    int long i, j;
+    char p, q;
 
-    while(getline(cin,rbs)){
-        if(rbs == '<' || rbs == '{' || rbs == '['){
-            adicionar_lista(rbs, head);
-        } else { adicionar_lista(rb)
-                left++;
-            }
+    node *left = new node;
+    node *right = new node;
+
+    left->pont = NULL; right->pont = NULL;
+    left->val = 'x';   right->val = 'y';
+
+    getline(cin,rbs); //pegando caracteres;
+    j = rbs.size();
+
+    for(i=0; i < j; i++) {
+        p = rbs[i];
+
+        if(p == '<' || p == '{' || p == '[' || p == '('){
+            adicionar_lista(p, left);
+        }else { adicionar_lista(p, right); }
+
+    }
+    observar_lista(left->pont); cout << endl;
+    observar_lista(right->pont); cout << endl;
+
+    int long r[5];
+    while(left->pont != NULL && right->pont != NULL){
+        p = remocao_lista(left);
+        q = remocao_lista(right);
+
+        if(p == '<'){ r[0]++;}
+        if(q == '>'){ r[0]--;}
+
+        if(p == '{'){ r[1]++;}
+        if(q == '}'){ r[1]--;}
+        
+        if(p == '['){ r[2]++;}
+        if(q == ']'){ r[2]--;}
+
+        if(p == '('){ r[3]++;}
+        if(q == ')'){ r[3]--;}
+
     }
 
+    cout << "depois da passarela" << endl;
+    observar_lista(left); cout << endl;
+    observar_lista(right); cout << endl;
+
+    if(right->pont != NULL || left->pont != NULL){
+        cout << "Impossible" << endl;
+        while(right->pont != NULL){
+            p = remocao_lista(right);
+        }
+
+        while(left->pont != NULL){
+            p = remocao_lista(left);
+        }
+
+        delete left;
+        delete right;
+
+        return 0;
+    }else 
+
+    r[4] = 0;
+
+    if(r[0] > 0) {r[4] += r[0];}
+    if(r[1] > 0) {r[4] += r[1];}
+    if(r[2] > 0) {r[4] += r[2];}
+    if(r[3] > 0) {r[4] += r[3];}
+
+    cout << r[4] << endl;
+
+    delete left;
+    delete right;
+    
+
     return 0;
+
 }
 
-node *adicionar_lista(char x, node *head){
+void adicionar_lista(char x, node *head){
     node *novo = new node;
-    novo->pont = head;
+    novo->pont = NULL;
     novo->val = x;
 
-    return novo;
+    node *cursor = head; //assim nao perderei o head;
+
+    while(cursor->pont != NULL){
+        cursor = cursor->pont;
+    }
+    cursor->pont = novo;
 }
 
 void observar_lista(node *head){
-    if(head == NULL){
+    node *cursor = head;
+
+    if(cursor == NULL){
         cout << "error, lista vazia" << endl;
-    } else while(head->pont != NULL){
-        cout << head->val << " ";
-        head = head->pont;
+    } else while(cursor->pont != NULL){
+        cout << cursor->val << '-';
+        cursor = cursor->pont;
     }
-    cout << endl;
+
+    cout << cursor->val << endl;;
 }
 
-node *remocao_lista(node *head){
-    node *auxiliar;
-    if(head->pont == NULL){ //tentando apagar nada;
-        return head;
-    } else{
-        auxiliar = head->pont;
-        delete head;
-        return auxiliar;
+char remocao_lista(node *head) {
+    node *cursor = head;
+    char sinal;
+
+    if(cursor->pont == NULL){//Proximo NO eh vazio
+        cout << "Sem nada para remover" << endl;
+        return head->val;
     }
+    
+    cursor = cursor->pont;
+    sinal = cursor->val;
+        
+    head->pont = cursor->pont; //apontando para o prx cara que eu deletei;
+    delete cursor;
+    return sinal;
+    
 }
