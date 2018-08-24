@@ -15,15 +15,16 @@ char remocao_lista(node *head);
 
 int main(){
     string rbs;
+    int possibilidade = 1;
     int long i, j;
     char p, q;
 
     node *left = new node;
     node *right = new node;
+    node *left2 = new node;
 
-    left->pont = NULL; right->pont = NULL;
-    left->val = 'x';   right->val = 'y';
-
+    left->pont = NULL; right->pont = NULL; left2->pont = NULL; 
+    left->val = 'x';   right->val = 'y'; left2->val = 'z';
     getline(cin,rbs); //pegando caracteres;
     j = rbs.size();
 
@@ -32,65 +33,65 @@ int main(){
 
         if(p == '<' || p == '{' || p == '[' || p == '('){
             adicionar_lista(p, left);
-        }else { adicionar_lista(p, right); }
+            adicionar_lista(p, left2);
+        }else {
+            adicionar_lista(p, right); 
+            if(left->pont == NULL){
+                possibilidade = 0;
+                break;
+            }else p = remocao_lista(left); /********/
+        }
 
     }
-    observar_lista(left->pont); cout << endl;
-    observar_lista(right->pont); cout << endl;
 
-    int long r[5];
-    while(left->pont != NULL && right->pont != NULL){
-        p = remocao_lista(left);
-        q = remocao_lista(right);
+    int long r[5]; r[0]= 0; r[1]= 0; r[2]= 0; r[3]= 0;
+    while(left2->pont != NULL){
+        p = remocao_lista(left2);
 
         if(p == '<'){ r[0]++;}
-        if(q == '>'){ r[0]--;}
-
         if(p == '{'){ r[1]++;}
-        if(q == '}'){ r[1]--;}
-        
         if(p == '['){ r[2]++;}
-        if(q == ']'){ r[2]--;}
-
         if(p == '('){ r[3]++;}
-        if(q == ')'){ r[3]--;}
 
     }
 
-    cout << "depois da passarela" << endl;
-    observar_lista(left); cout << endl;
-    observar_lista(right); cout << endl;
+    while(left->pont != NULL){
+        p = remocao_lista(left);    
+    }
 
-    if(right->pont != NULL || left->pont != NULL){
-        cout << "Impossible" << endl;
-        while(right->pont != NULL){
-            p = remocao_lista(right);
-        }
+    while(right->pont != NULL){
+        p = remocao_lista(right);
 
-        while(left->pont != NULL){
-            p = remocao_lista(left);
-        }
-
-        delete left;
-        delete right;
-
-        return 0;
-    }else 
+        if(p == '>'){ r[0]--;}
+        if(p == '}'){ r[1]--;}
+        if(p == ']'){ r[2]--;}
+        if(p == ')'){ r[3]--;}
+    }
 
     r[4] = 0;
-
     if(r[0] > 0) {r[4] += r[0];}
     if(r[1] > 0) {r[4] += r[1];}
     if(r[2] > 0) {r[4] += r[2];}
     if(r[3] > 0) {r[4] += r[3];}
 
+    if(possibilidade == 0 || (r[0] + r[1] + r[2] + r[3]) != 0){
+        cout << "Impossible" << endl;
+
+        delete left;
+        delete left2;
+        delete right;
+
+    }else{
+
     cout << r[4] << endl;
 
     delete left;
     delete right;
+    delete left2;
     
-
     return 0;
+    }
+
 
 }
 
