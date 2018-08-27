@@ -1,0 +1,146 @@
+#include <iostream>
+#include <string>
+using namespace std;
+#define ptrnull NULL
+
+struct Node{
+    char val;
+    struct Node *pont;
+};
+typedef struct Node node;
+
+void adicionar_lista(char x, node *head);
+void observar_lista(node *head);
+char remocao_lista(node *head);
+char procurar_ultimo(node *head);
+
+int main(){
+    string rbs;
+
+    int controle = 0, contador = 0;
+    int long i, j;
+    char p, q;
+
+    node *left = new node;
+    left->pont = NULL; 
+    left->val = 'x';
+
+    getline(cin,rbs); //pegando caracteres;
+    j = rbs.size();
+
+    for(i=0; i < j; i++) {
+        p = rbs[i];
+
+        if(p == '<' || p == '{' || p == '[' || p == '('){
+            adicionar_lista(p, left);
+        
+        }else{
+            if(left->pont == NULL){ //Exemplo: ][ ;
+                controle = 1;
+                break;
+            }else{
+                q = remocao_lista(left);
+                    if(p == ')' && q == '('){
+                        //faz nada;
+                    }else{
+
+                        if(p == '>' && q == '<'){
+                            //faz nada; 
+                        }else{
+
+                            if(p == ']' && q == '['){
+                               //faz nada;
+                            }else{
+                            
+                                if(p == '}' && q == '{'){
+                                    //faz nada;
+                                }else contador++;
+
+                            }
+                        }
+                    }
+        
+            }
+        }
+
+    }
+
+    if(controle == 1 || left->pont != NULL){
+        cout << "Impossible" << endl;
+    }else {
+        cout << contador << endl;
+    }
+
+    delete left;
+    return 0;
+    
+}
+
+void adicionar_lista(char x, node *head){ //adicionando no final normalmente;
+    node *novo = new node;
+    novo->pont = NULL;
+    novo->val = x;
+
+    node *cursor = head; //assim nao perderei o head;
+
+    while(cursor->pont != NULL){
+        cursor = cursor->pont;
+    }
+    cursor->pont = novo;
+}
+
+void observar_lista(node *head){
+    node *cursor = head;
+
+    if(cursor == NULL){
+        cout << "error, lista vazia" << endl;
+    } else while(cursor->pont != NULL){
+        cout << cursor->val << '-';
+        cursor = cursor->pont;
+    }
+
+    cout << cursor->val << endl;;
+}
+
+char remocao_lista(node *head) {
+    node *cursor = head;
+    node *auxiliar;
+    char sinal;
+
+    if(cursor->pont == NULL){//Proximo NO eh vazio;
+        cout << "Sem nada para remover" << endl;
+        return cursor->val;
+
+    }else{
+        if(cursor->pont->pont == NULL){
+            sinal = cursor->pont->val;
+            cursor = cursor->pont;
+            head->pont = NULL;
+
+            delete cursor;
+            return sinal;
+        }else{
+    
+            while(cursor->pont->pont != NULL){//Procurando o final, e apontando p/ o anterior dele;
+                cursor = cursor->pont;
+            }
+
+            sinal = cursor->pont->val; //Recebendo valor dele;
+            auxiliar = cursor->pont; //Auxiliar recebe a posicao que devera deletar;
+            cursor->pont = cursor->pont->pont; //fazendo apontar para o NULL;
+            delete auxiliar;
+
+            return sinal;
+        }
+    }
+}
+
+char procurar_ultimo(node *head){
+    node *cursor = head;
+
+    while(cursor->pont != NULL){
+        cursor = cursor->pont;
+    }
+
+    return cursor->val;
+}
