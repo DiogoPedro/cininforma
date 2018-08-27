@@ -17,7 +17,9 @@ void contar_barcos();
 
 int main(){
 	int numero;
-	cin >> numero;
+	//cin >> numero;
+    numero = 1;
+
 	while(numero != 0){
 		contar_barcos();
 		numero--;
@@ -71,21 +73,16 @@ int remocao_lista(node *head) {
 }
 
 void remocao_barcos(node *head, int tamanho){
-	node *cursor = head; 
+	node *cursor = head;
 
 	while(tamanho >= 0){
 		if(cursor->pont == NULL){
 			break;
 		}
 
-		if(cursor == NULL){
-			break;
-		}
-
-		if(tamanho >= cursor->val){
-			tamanho -= remocao_lista(cursor);
-
-		}
+		if(tamanho - cursor->val >= 0){
+            tamanho
+        }
 	}
 
 }
@@ -121,8 +118,14 @@ void contar_barcos(){
     }while(qnt_carros != 0);//funcionando numa boa;
 
    while(1){
+            cout << "lista da esquerda, depois a direita em seguida" << endl;
+            observar_lista(posicao_esquerda->pont); cout << endl;
+            observar_lista(posicao_direita->pont); cout << endl;
+
     		if(posicao_esquerda->pont != NULL){
     			remocao_barcos(posicao_esquerda, tamanho);
+                cout << "depois da remocao dos barcos da esquerda, temos :" << endl;
+                observar_lista(posicao_esquerda->pont);
     			contador++;
 
     		}else if(posicao_direita->pont != NULL){
@@ -132,6 +135,8 @@ void contar_barcos(){
     		if(posicao_direita->pont != NULL){
     			remocao_barcos(posicao_direita, tamanho);
     			contador++;
+                cout << "depois da remocao dos barcos da direita, temos :" << endl;
+                observar_lista(posicao_direita->pont);                
 
     		}else if(posicao_esquerda->pont != NULL){
     			contador++;
