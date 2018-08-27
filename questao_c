@@ -1,0 +1,100 @@
+#include <iostream>
+#include <string>
+using namespace std;
+#define ptrnull NULL
+
+char q; //Variavel global nojenta;
+struct Node{
+    char val;
+    struct Node *pont;
+};
+typedef struct Node node;
+
+node *adicionar_lista(char x, node *head);
+node *remocao_lista(node *head);
+
+int main(){
+    string rbs;
+
+    int controle = 0, contador = 0;
+    int long i, j;
+    char p;
+
+    node *head = new node;
+
+    head->val = 'z';
+    head->pont = NULL;
+
+    getline(cin,rbs); //pegando caracteres;
+    j = rbs.size();
+
+    for(i=0; i < j; i++) {
+        p = rbs[i];
+
+        if(p == '<' || p == '{' || p == '[' || p == '('){
+            head = adicionar_lista(p, head); //to perdendo o head aqui;
+        
+        }else{
+            if(head->pont == NULL){ //Exemplo: ][ ;
+                controle = 1;
+                break;
+            }else{
+                head = remocao_lista(head);
+                cout << "a letra q: " << q << " a letra p: " << p << endl;
+                    if(p == ')' && q == '('){
+                        //faz nada;
+                    }else{
+
+                        if(p == '>' && q == '<'){
+                            //faz nada; 
+                        }else{
+
+                            if(p == ']' && q == '['){
+                               //faz nada;
+                            }else{
+                            
+                                if(p == '}' && q == '{'){
+                                    //faz nada;
+                                }else contador++;
+
+                            }
+                        }
+                    }
+        
+            }
+        }
+
+    }
+
+    if(controle == 1 || head->pont != NULL){
+        cout << "Impossible" << endl;
+    }else {
+        cout << contador << endl;
+    }
+
+    delete head;
+    return 0;
+    
+}
+
+node *adicionar_lista(char x, node *head){
+    node *novo = new node;
+    novo->pont = head;
+    novo->val = x;
+
+    return novo;
+}
+
+node *remocao_lista(node *head){
+    node *auxiliar;
+    char valor;
+
+    if(head->pont == NULL){ //tentando apagar nada;
+        return head;
+    } else{
+        q = head->pont->val;
+        auxiliar = head->pont;
+        delete head;
+        return auxiliar;
+    }
+}
