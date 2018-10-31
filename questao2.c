@@ -4,38 +4,25 @@
 #include <math.h>
 
 //Dados
+pthread_barrier_t aguardando;
+int qnt_equecoes = 8;   //Se a quantidade de equacoes for menor que threads, entao threads tenderam a fica inativas;
 int numero = 0;
-int qnt_equecoes = 2;   //Se a quantidade de equacoes for menor que threads, então thredas tenderam a fica inativas;
 int p = 10;
-pthread_barrier_t paradinha;
 
 //Matriz
-int A[2][2];
-int B[2][1];
 char X[2][1];
+int  A[2][2];
+int  B[2][1];
 
-void atribuindoA(int matriz[][2]);
-void atribuindoB(int matriz[][1]);
+void atribuindoA(int  matriz[][2]);
+void atribuindoB(int  matriz[][1]);
 void atribuindoX(char matriz[][1]);
 
-/*
-void desalocar(int *head){
-    for(int i=0; i < numero; i++){
-        free(head[i]);
-    }
-}
-*/
-
-void *numsei(void *indice){
+void *fun_soluc(void *indice){
     int i = *((int *)indice);
     int j = 1;
     
-    for(int k=0; k < p; k++){
-        for(j=0; j< )
-        
-
-    }
-
+    printf("Indice: %d\n", i);
 }
 
 int main(){
@@ -47,23 +34,34 @@ int main(){
     pthread_t threads[numero];
     int *indice[numero];
 
-    pthread_barrier_init(&paradinha, NULL, numero);
+    //Criacao de uma barreira//
+    pthread_barrier_init(&aguardando, NULL, numero);
 
-    for(int i=0; i < numero; i++){
+    for(int i=0, j=0; i < qnt_equecoes; i++, j++){
         indice[i] = (int*) malloc(sizeof(int));
         *indice[i] = i;
 
+        if(j == numero){
+        //Eh necessario antes de enviar as threads, verificalas se já terminaram suas funções para usalas de novo//
+
+            while(j>0){//Não sei se essa paradinha vai da certo//
+                printf("Esperando a thread, terminar: %d\n", i-j);
+                pthread_join(threads[i-j], NULL);
+                j--;
+            }
+
+        }
+
         if(i < qnt_equecoes){
-            printf("Criada a thread#%d\n", *indice[i]+1);
-            pthread_create(&threads[i], NULL, numsei, (void*) indice[i]);
+            printf("Criada a thread#%d\n", *indice[i]+1);   //O +1 representa que a thread 0 é a main;//
+            pthread_create(&threads[j], NULL, fun_soluc, (void*) indice[i]);    //A variável j representa o indice do
         }
 
     }
 
     pthread_exit(NULL);
-
     //desalocar(&indice);
-    pthread_barrier_destroy(&paradinha);
+    pthread_barrier_destroy(&aguardando);
     
     return 0;
 }
